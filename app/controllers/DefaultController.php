@@ -9,13 +9,14 @@ class DefaultController{
         $this->productModel = new ProductModel($this->db);
     }
     public function Index() {
-
-        if(!Auth::isAdmin()){
-            header('Location: /chieu2/account/login');
-        }
         
-        $products = $this->productModel->readAll();
+            //header('Location: /chieu2/account/login');
+            //$products = $this->productModel->readAll();
+            header('Location: /chieu2/product/listProducts');
+      
+           // header('Location: /chieu2/product/listProducts');
 
-        include_once 'app/views/share/index.php';
+        
+        
     }
 }

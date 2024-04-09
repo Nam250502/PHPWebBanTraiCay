@@ -2,6 +2,9 @@
 require_once 'config/database.php';
 require_once 'app/models/ProductModel.php';
 require_once 'app/models/AccountModel.php';
+require_once 'app/models/OrderModel.php';
+require_once 'app/models/OrderDetailModel.php';
+
 require_once 'app/libs/Auth.php';
 
 session_start();

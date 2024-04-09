@@ -14,9 +14,9 @@ class ProductController
     public function listProducts()
     {
 
-        $stmt = $this->productModel->readAll();
-
-        include_once 'app/views/product_list.php';
+        //$stmt = $this->productModel->readAll();
+        $products = $this->productModel->readAll();
+        include_once 'app/views/share/index.php';
     }
 
     public function add()
