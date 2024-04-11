@@ -13,12 +13,13 @@ class ProductController
 
     public function listProducts()
     {
-
-        //$stmt = $this->productModel->readAll();
         $products = $this->productModel->readAll();
         include_once 'app/views/share/index.php';
     }
-
+    public function detailProduct($id){
+        $product = $this->productModel->getProductById($id);
+        include_once 'app/views/user/product-detail.php';
+    }
     public function add()
     {
         include_once 'app/views/product/add.php';

@@ -108,7 +108,6 @@ class CartController
                     $a = $this->orderDetailModel->createDetailOrder( $orderID,$productID, $soLuong, $giaTien, $thanhTien);   
                 }
             }
-           
             if ($result !== false) {
           
                 $_SESSION['order_details'] = $this->getOrderDetails($orderID);
@@ -141,6 +140,7 @@ class CartController
     function show()
     {
         include_once 'app/views/cart/index.php';
+        
     }
     public function confirm()
     {
