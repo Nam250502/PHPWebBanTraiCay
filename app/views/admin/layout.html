@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>layout</title>
+</head>
+
+<body>
+
+
+    
+    <div th:fragment="tablestore">
+        <div class="row">
+            <div class="col-sm-3" th:each="item : ${table}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title ">
+                            <h5 class="" th:text="'Bàn Số:'+${item.id }"></h5>
+
+                        </h5>
+                        <p class="card-text text-success" th:if="${item.status==1}">Trạng Thái : Bàn trống</p>
+                        <p class="card-text text-danger" th:if="${item.status==2}">Trạng Thái : Bàn có Khách</p>
+                        <p class="card-text text-danger" th:if="${item.status==3}">Trạng Thái : Bàn đã được đặt</p>
+                        <div class="d-flex align-items-end justify-content-center ">
+                            <a href="#" th:href="@{/staff/viewtable/{id}(id=${item.id})}" class="btn btn-primary m-2">xem chi tiết</a>
+                            <button th:attr="data-id-table=${item.id}" class="btn btn-primary m-2" type="button" id="btnshowqr" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-qr-code-scan" viewBox="0 0 16 16">
+                                    <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z"></path>
+                                    <path d="M7 2H2v5h5V2ZM3 3h3v3H3V3Zm2 8H4v1h1v-1Z"></path>
+                                    <path d="M7 9H2v5h5V9Zm-4 1h3v3H3v-3Zm8-6h1v1h-1V4Z"></path>
+                                    <path d="M9 2h5v5H9V2Zm1 1v3h3V3h-3ZM8 8v2h1v1H8v1h2v-2h1v2h1v-1h2v-1h-3V8H8Zm2 2H9V9h1v1Zm4 2h-1v1h-2v1h3v-2Zm-4 2v-1H8v1h2Z"></path>
+                                    <path d="M12 9h2V8h-2v1Z"></path>
+                                  </svg>
+                                  QR
+                              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div th:fragment="product">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Mô tả </th>
+                    <th scope="col">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item, itemStat : ${menu}">
+                    <td th:text="${itemStat.count}"></td>
+                    <td>
+                        <img th:src="${item.url}" alt="Card image cap" style="height: 100px; object-fit: cover;">
+                    </td>
+                    <td>
+                        <h5 th:text="${item.name}">Special title treatment</h5>
+                    </td>
+                    <td th:text="${item.price}"></td>
+                    <td th:text="${item.description}"></td>
+                    <td>
+                        <p th:if="${item.statussell == 1}" class="text-success">Đang bán</p>
+                        <p th:if="${item.statussell == 0}" class="text-danger">Dừng bán</p>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-end justify-content-between">
+                            <a class="p-2 m-1" href="#" th:href="@{/store/editfood/{id}(id=${item.id})}">
+                                <i style="height: 70px; width: 70px;" class="ti ti-edit"></i>
+                            </a>
+                            <a th:if="${item.statussell == 1}" class="p-2 m-1" th:href="@{/store/foodstatus/{id}(id=${item.id})}">
+                                <i style="height: 70px; width: 70px;" class="ti ti-eye-off"></i>
+                            </a>
+                            <a th:if="${item.statussell == 0}" class="p-2 m-1" th:href="@{/store/foodstatus/{id}(id=${item.id})}">
+                                <i style="height: 70px; width: 70px;" class="ti ti-eye-check"></i>
+                            </a>
+                        </div>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:fragment="editfood">
+        <form action="/store/updatefood" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <img th:src="${food.url}" id="previewImage" alt="" style="height: 170px; width: 340px;">
+                                <input type="file" class="form-control" id="url" name="file" accept="image/*" onchange="previewFile()">
+                                <input type="hidden" class="form-control" id="url" name="url" th:value="${food.url}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <input type="hidden" th:value="${food.id}" name="id">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" th:value="${food.name}" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description" th:text="${food.description}"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="text" class="form-control" id="price" th:value="${food.price}" name="price">
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option th:each="c : ${category}" th:value="${c.id}" th:text="${c.name}"
+                                        th:selected="${c.id == food.category.id}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập nhập món</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>l

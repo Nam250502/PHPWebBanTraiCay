@@ -13,18 +13,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-6">
-            <a href="/chieu2/product/add" class="btn btn-primary btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fas fa-flag"></i>
-                </span>
-                <span class="text">Thêm Sản Phẩm</span>
-            </a>
-            <a href="/chieu2/cart/show" class="btn btn-primary btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fas fa-flag"></i>
-                </span>
-                <span class="text">Giỏ Hàng</span>
-            </a>
+            
         </div>
     </div>
     <div class="row mt-4">
@@ -43,7 +32,7 @@
                 <tbody>
                     <?php while ($row = $products->fetch(PDO::FETCH_ASSOC)): ?>
                         <tr>
-                        <td> <button class="btn btn-danger" onclick="addcart(<?php echo $row['id']; ?>)">ADD TO CART</button></td>
+                        
                             <td><?= $row['id'] ?></td>
                             <td><?= $row['name'] ?></td>
                             <td><?= $row['description'] ?></td>

@@ -1,4 +1,5 @@
 <?php
+require('app/models/sendmail.php');
 class CartController
 {
     private $productModel;
@@ -55,7 +56,7 @@ class CartController
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
-
+        $quantity = $_POST['quantity'] ?? 1 ;
         // Lấy sản phẩm từ ProductModel bằng $id
         $product = $this->productModel->getProductById($id);
 
@@ -65,7 +66,7 @@ class CartController
             $productExist = false;
             foreach ($_SESSION['cart'] as &$item) {
                 if ($item->id == $id) {
-                    $item->quantity++;
+                    $item->quantity+=$quantity;
                     $productExist = true;
                     break;
                 }
@@ -73,7 +74,8 @@ class CartController
 
             // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm mới vào
             if (!$productExist) {
-                $product->quantity = 1;
+                
+                $product->quantity = $quantity;
                 $_SESSION['cart'][] = $product;
             }
 
@@ -82,8 +84,7 @@ class CartController
             echo "Không tìm thấy sản phẩm với ID này!";
         }
     }
-
-   
+    
 
     public function process_order()
     {
@@ -109,7 +110,7 @@ class CartController
                 }
             }
             if ($result !== false) {
-          
+                $_SESSION['gmail']=$email;
                 $_SESSION['order_details'] = $this->getOrderDetails($orderID);
                 unset($_SESSION['cart']);
                 header('Location: /chieu2/cart/confirm');
@@ -124,7 +125,7 @@ class CartController
 
     private function getOrderDetails($orderId)
     {
-        $sql = "SELECT p.name, od.soLuong, p.price
+        $sql = "SELECT p.name, od.soLuong, p.price, od.thanhtien
         FROM orderdetails od
         JOIN products p ON od.productID = p.id
         WHERE od.orderID = ?;";
@@ -132,30 +133,45 @@ class CartController
         $stmt->execute([$orderId]);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
-    
-     
-    function order(){
-        include_once 'app/views/cart/order.php';
-    }
     function show()
     {
-        include_once 'app/views/cart/index.php';
+        include_once 'app/views/user/cart.php';
         
     }
     public function confirm()
     {
+        $total_price = 0;
+        $tieude = "Đặt hàng DREW HOUSE";
+        $noidung = "<p>Cảm ơn quý khách đã đặt hàng.</p>";
+        $noidung .= "<h4>Đơn hàng của bạn bao gồm: </h4>";
+        foreach ($_SESSION['order_details'] as $item) {
+            // Truy cập thuộc tính của đối tượng $item bằng cách sử dụng dấu mũi tên (->)
+            $noidung .= "<ul style='border:1px solid pink; margin:10px;'>
+                         <li>Tên sản phẩm: " . $item->name . "</li>
+                         <li>Giá sản phẩm: " . number_format($item->price, 0, ',', '.') . "</li>
+                         <li>Số lượng: " . $item->soLuong . "</li>
+                         </ul>";
+            $total_price += $item->thanhtien;
+        }
+        
+        // Thêm dòng tổng số tiền vào nội dung email
+        $noidung .= "<p><strong>Tổng số tiền: </strong>" . number_format($total_price, 0, ',', '.') . " VNĐ</p>";
+        $mail = new Mailer();
+        $mail->dathangmail($tieude,$noidung,$_SESSION['gmail']);
         include_once 'app/views/cart/confirm.php';
     }
-
-    function checkout(){
+    
+    public function checkout()
+    {
         if(!Auth::isLoggedIn()){
             echo "<script>alert('Xin lỗi, bạn chưa đăng nhập');</script>";
             header('Location: /chieu2/account/login');
             exit(); 
         } else {
-            header('Location: /chieu2/cart/order');
+            include_once 'app/views/user/chekout.php';
             exit(); 
         }
+      
     }
-  
+    
 }

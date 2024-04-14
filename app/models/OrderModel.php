@@ -6,6 +6,14 @@ class OrderModel {
     public function __construct($db) {
         $this->conn = $db;
     }
+    function readAll() {
+        $query = "SELECT * FROM " . $this->table_name;
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return $stmt;
+    }
     function createOrder($hoTen, $dienThoai, $email, $diachi, $ghichu, $phuongThucThanhToan)
     {
    
@@ -41,7 +49,18 @@ class OrderModel {
         return false;
     }
 
-    
+    function countOrder() {
+        $query = "SELECT count(id) as soluong FROM demo.orders;"; 
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+    function totalPriceOrder() {
+        $query = "SELECT sum(thanhtien) as tongtien from demo.orderdetails"; 
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
 
     
 }

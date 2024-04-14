@@ -37,6 +37,24 @@ class OrderDetailModel {
         return false;
     }
     
+    function getOrderDetailById($id) {
+        $query = "SELECT p.name, p.price, od.soluong, od.thanhtien 
+                  FROM " . $this->table_name . " od 
+                  JOIN " . $this->table_nameP . " p ON od.productID = p.id 
+                  WHERE od.orderID = :id"; // Sử dụng tham số định danh :id để tránh các vấn đề bảo mật
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id); // Ràng buộc tham số :id với giá trị thực tế của $id
+        $stmt->execute();
+        return $stmt;
+    }
+    function getReport() {
+        $query = "SELECT p.name,sum(od.soluong) as soluong 
+        FROM demo.orderdetails od join demo.products p on od.productID = p.id
+        group by od.productID ;"; 
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
     
 
     

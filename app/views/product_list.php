@@ -6,7 +6,7 @@
 <body>
     <h1>Danh sách sản phẩm</h1>
     <ul>
-    <?php while ($row = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
+    <?php while ($row = $products->fetch(PDO::FETCH_ASSOC)): ?>
         <li>
             <?php echo $row['name'] . " - " . $row['description'] . " - " . $row['price']; ?>
         </li>

@@ -11,6 +11,7 @@ class AccountController{
     }
 
     function login(){
+        // include_once 'app/views/account/login.php';
         include_once 'app/views/account/login.php';
     }
 
@@ -83,8 +84,12 @@ class AccountController{
                 //luu trang thai dang nhap
                 $_SESSION['username'] = $account->email;
                 $_SESSION['role'] = $account->role;
-
-                header('Location: /chieu2');
+                if($account->role=='admin'){
+                    header('Location: /chieu2/admin/listProducts');
+                }else{
+                    header('Location: /chieu2');
+                }
+               
             }else{
                 $errors['account'] = "Dang nhap that bai!";
                 include_once 'app/views/account/login.php';
